@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antd.modules.security.dao.SecWarnMsgDao">
+	<select id="queryListPage" resultType="com.antd.modules.security.entity.SecWarnMsg">
+		SELECT m.*,d.name dataName,e.name equipmentName FROM sec_warn_msg m LEFT JOIN sec_data d ON m.data_id = d.id LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id
+		where 1
+		<if test="params.name != null">
+			and d.name like concat('%',#{params.name},'%')
+			or e.name like concat('%',#{params.name},'%')
+		</if>
+		order by m.is_read,m.id desc
+	</select>
+
+	<select id="uniQueryList" resultType="com.antd.modules.security.entity.SecWarnMsg">
+		SELECT m.*,d.name dataName,e.name equipmentName FROM sec_warn_msg m LEFT JOIN sec_data d ON m.data_id = d.id LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id
+		where 1
+	</select>
+</mapper>

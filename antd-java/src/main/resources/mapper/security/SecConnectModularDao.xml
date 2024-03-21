@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antd.modules.security.dao.SecConnectModularDao">
+	<select id="queryListPage" resultType="com.antd.modules.security.entity.SecConnectModular">
+		SELECT m.*,c.name connectName FROM sec_connect_modular m LEFT JOIN sec_connect c ON m.connect_id = c.id
+		where 1
+		<if test="params.name != null">
+			and m.name like concat('%',#{params.name},'%')
+		</if>
+		order by m.id desc
+	</select>
+
+	<select id="queryAll" resultType="com.antd.modules.security.entity.SecConnectModular">
+		SELECT m.id,m.name FROM sec_connect_modular m
+	</select>
+</mapper>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+    	*{margin: 0;padding: 0}
+    	#main{
+    		width: 600px;
+    		border: 1px solid #ccc;
+    		margin: 60px auto;
+    		box-shadow: 1px 1px 1px green
+    	}
+    	#main h3{
+    		text-align: center;
+    		background: #ff784d;
+    		color: #fff;
+    		padding: 10px
+    	}
+    	#content{
+    		padding: 20px;
+    		font-size: 14px
+    	}
+    	#content p{
+    		margin-bottom: 10px
+    	}
+    	#content p a{
+    		color: #22b7e8;
+    		text-decoration: none
+    	}
+    	.heig{
+    		color: #ff784d;
+    		font-size: 18px;
+    	}
+    	span a{
+    		color: #fff;
+    		text-decoration: none !important
+    	}
+    </style>
+</head>
+<body>
+    <div id="main">
+    	<h3>绑定店铺管理员：<span th:text="${email}"></span></h3>
+    	<div id="content">
+	    	<p>您好，这封信是由火华科技电商平台发出的！</p>
+	    	<p>欢迎绑定，邮箱绑定验证码是：<b class="heig" th:text="${code}"></b></p>
+	    	<p>请注意：邮箱绑定验证码仅在<b>五分钟</b>内有效！</p>
+	    	<p>"您收到这封邮件，是由于在“火华科技电商后台”进行了店铺绑定管理员使用了这个邮箱地址。如果您并没有访问“火华科技电商后台”，或没有进行上述操作，请忽略这封邮件。您不需要退订或进行其他进一步操作。"</p>
+	    	<p>您可以点击这里进入<a target="_blank" href="https://www.huohuatech.com">火华科技-电商后台</a></p>
+	    	<p align="right">火华科技团队</p>
+    	</div>
+    </div>
+</body>
+</html>

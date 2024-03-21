@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://192.168.1.6:3306/antd_admin?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: Hhkj8530!
+  redis:
+    host: 192.168.1.6
+    port: 8011
+    password: antd

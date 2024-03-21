@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/huohua_cb_shop?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: root
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+#saveFilePath: 'C:\\uplaodFiles'
+saveFilePath: 'E:\SecurityProject(teacher)\savefile_prod'

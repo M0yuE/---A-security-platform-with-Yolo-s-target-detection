@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antd.modules.security.dao.SecDataDao">
+	<select id="queryListPage" resultType="com.antd.modules.security.entity.SecData">
+		SELECT d.*,i.name instructName,i.ret_example FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id
+		where i.id = #{params.pid}
+		<if test="params.name != null">
+			and d.name like concat('%',#{params.name},'%')
+		</if>
+		order by d.id desc
+	</select>
+	<select id="queryIdByPid" resultType="int">
+		select id from sec_data where instruct_id in
+		<foreach item="ite" collection="list" open="(" separator="," close=")">
+			#{ite}
+		</foreach>
+	</select>
+	<select id="queryDataWithPInfo" resultType="com.antd.modules.security.entity.SecData">
+
+		SELECT d.*,i.equipment_id,i.name instructName,i.ret_example,e.name equipmentName FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id
+	</select>
+	<select id="queryDataWithPInfoById" resultType="com.antd.modules.security.entity.SecData">
+
+		SELECT d.*,i.equipment_id,i.name instructName,i.ret_example,e.name equipmentName FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id where d.id = ${id}
+	</select>
+	<select id="queryPageWithMoreInfo" resultType="com.antd.modules.security.entity.SecData">
+
+		SELECT d.*,i.equipment_id,i.name instructName,i.ret_example,e.name equipmentName FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id
+		where d.bind_data is null
+		<if test="params.modularId != null">
+			and e.modular_id = #{params.modularId}
+		</if>
+		<if test="params.equipmentId != null">
+			and e.id = #{params.equipmentId}
+		</if>
+		<if test="params.name != null">
+			and d.name like concat('%',#{params.name},'%')
+		</if>
+	</select>
+	<select id="getQueryDataByEquipment" resultType="com.antd.modules.security.entity.SecData">
+		SELECT d.* FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id WHERE i.`type` = 0 and i.equipment_id = ${id}
+	</select>
+
+
+	<select id="queryAllStateData" resultType="com.antd.modules.security.entity.SecData">
+		SELECT d.*,i.equipment_id,i.name instructName,i.ret_example,e.name equipmentName FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id
+		where d.bind_data is null
+	</select>
+
+	<select id="queryAllControllerData" resultType="com.antd.modules.security.entity.SecData">
+		SELECT d.`*`,i.equipment_id,i.name instructName,i.ret_example,e.name equipmentName FROM sec_data d LEFT JOIN sec_instruct i ON d.instruct_id = i.id LEFT JOIN sec_equipment e ON i.equipment_id = e.id
+		where d.bind_data is not null
+	</select>
+
+
+</mapper>

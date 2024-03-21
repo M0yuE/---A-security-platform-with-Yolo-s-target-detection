@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antd.modules.security.dao.SecConnectDao">
+	<select id="getAllConnectWithCount" resultType="secConnect">
+		SELECT c.*,COUNT(m.id) connectCount FROM sec_connect c LEFT JOIN sec_connect_modular m ON c.id = m.connect_id GROUP BY c.id
+	</select>
+</mapper>

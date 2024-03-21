@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/wisdom_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: root
+  #      password: root
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 60s
+    lettuce:
+      pool:
+        max-idle: 30
+        max-active: 8
+        max-wait: 10000
+        min-idle: 10
+#saveFilePath: 'G:\\uplaodFiles'
+saveFilePath: 'E:\SecurityProject(teacher)\savefile_dev'
