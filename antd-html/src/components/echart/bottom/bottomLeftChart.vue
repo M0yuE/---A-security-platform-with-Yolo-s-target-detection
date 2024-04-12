@@ -26,9 +26,9 @@
                 this.chart = this.$echarts.init(document.getElementById("bottomLeftChart"));
                 this.$http.post(api.data.NodeData).then(res => {
                     if (res.code == 0) {
-                        this.category = res.NodeMockData.nodeName;
-                        this.lineData = res.NodeMockData.nodeData2;
-                        this.barData = res.NodeMockData.nodeData1;
+                        this.category = res.NodeMockData.category;
+                        this.lineData = res.NodeMockData.lineData;
+                        this.barData = res.NodeMockData.barData;
 
                         let rateData = [];
                         for (let i = 0; i < 33; i++) {
