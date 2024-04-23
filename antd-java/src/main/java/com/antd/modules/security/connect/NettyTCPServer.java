@@ -3,6 +3,7 @@ package com.antd.modules.security.connect;
 import com.alibaba.fastjson.JSON;
 import com.antd.common.utils.SpringContextUtils;
 import com.antd.modules.security.dao.SecConnectModularDao;
+import com.antd.modules.security.entity.EchartsShowDataStorage;
 import com.antd.modules.security.entity.SecConnect;
 import com.antd.modules.security.entity.SecConnectModular;
 import com.antd.modules.security.entity.SecData;
@@ -86,17 +87,23 @@ class ServerDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+        EchartsShowDataStorage dataStorage = new EchartsShowDataStorage(); //数据临时库存 用于获取到数据发送到controller
         try {
             // 读取原始数据串 不会改变ByteBuf 索引
             byte[] bytes = new byte[in.readableBytes()];
             in.readBytes(bytes);
             String strData = new String(bytes);//开头结尾使用@符号包围
             RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>) SpringContextUtils.getBean("redisTemplate");
-            Pattern c = Pattern.compile("@.*?@");
+            Pattern c = Pattern.compile("@.*?@"); //正则表达式
             Matcher m = c.matcher(strData);
             //modular:abcd(模块信息) modular:modularId:0001(指令下数据项list)
-            if(m.find()){
-                strData = m.group();
+            /*
+             * 下方的if-else应该是用来区分链接字符和接收数据的,如果匹配不到@...@,那么说明是发送的数据包
+             * 完整的信息应该需要两部分: 模块信息和数据值:"000501aaaa:567" ,但是原先代码中并没有获取数据值这一项代码
+             * 所以 TODO 是应该在这里获取数据值传给前端,还是直接在单片机代码中向前端传值
+             */
+            if(m.find()){ //搜索是否有上句正则相匹配的内容
+                strData = m.group(); //m.group()即是获取到匹配的字符串
                 ChannelAttr parAttr = ctx.channel().parent().attr(NettyConstant.CTX_INFO).get();
                 String key = "modular:" + parAttr.getSecConnect().getId() + ":" +strData.substring(1, strData.length() - 1);
                 SecConnectModular modular = (SecConnectModular) redisTemplate.opsForValue().get(key);
@@ -112,6 +119,7 @@ class ServerDecoder extends ByteToMessageDecoder {
                 in.resetReaderIndex();
                 String originalData = ByteBufUtil.hexDump(in).toLowerCase();
                 logger.info("当次包数据-->" + originalData);
+                dataStorage.setDataStorage("dataStorage",originalData); //放入ConCurrentHashMap中
                 while(originalData.length() >= 10){
                     String cmdId = originalData.substring(0,4);
                     ChannelAttr channelAttr = ctx.channel().attr(NettyConstant.CTX_INFO).get();

@@ -1,16 +1,19 @@
 <template>
   <div>
-    <div id="centreLeft2Chart" style="width:4.125rem; height: 4.625rem;"></div>
+    <div id="centreLeft2Chart" style="width:4.5rem; height: 4rem;"></div>
   </div>
 </template>
 
 <script>
 import echartMixins from "@/utils/resizeMixins";
+import {axios} from "@/utils/request";
 
 export default {
   data() {
     return {
-      chart: null
+        chart: null,
+        timer: null,
+        smokeValue:0,
     };
   },
   mixins: [echartMixins],
@@ -22,193 +25,148 @@ export default {
       // 基于准备好的dom，初始化echarts实例
       this.chart = this.$echarts.init(document.getElementById("centreLeft2Chart"));
       //  ----------------------------------------------------------------
-
+      const host = "192.168.43.136";
+      const url = `http://${host}/smoke`;
+      const smokeValue = 600;
       let option = {
-        angleAxis: {
-          interval: 1,
-          type: "category",
-          data: [
-            // "there1",
-            // "there2",
-            // "there3",
-            // "there4",
-            // "there5",
-            // "there6",
-            // "there7",
-            // "there8",
-            // "there9",
-            // "there10 "
-              "Road1",
-              "Street2",
-              "K3",
-              "Lamp4",
-              "Monitor5",
-              "Screen6",
-              "C7",
-              "W8",
-              "Wall9",
-              "Router10 "
-          ],
-          z: 10,
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: "#00c7ff",
-              width: 1,
-              type: "solid"
-            }
-          },
-          axisLabel: {
-            interval: 0,
-            show: true,
-            color: "#00c7ff",
-            margin: 8,
-            fontSize: 12
-          }
-        },
-        radiusAxis: {
-          min: 0,
-          max: 100,
-          interval: 20,
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: "#00c7ff",
-              width: 1,
-              type: "solid"
-            }
-          },
-          axisLabel: {
-            formatter: "{value} %",
-            show: false,
-            padding: [0, 0, 20, 0],
-            color: "#00c7ff",
-            fontSize: 16
-          },
-          splitLine: {
-            lineStyle: {
-              color: "#00c7ff",
-              width: 1,
-              type: "solid"
-            }
-          }
-        },
-        legend: {
-          show: true,
-          orient: "vartical",
-          top: "center",
-          bottom: "0%",
-          itemWidth: 16,
-          itemHeight: 8,
-          itemGap: 16,
-          textStyle: {
-            color: "#A3E2F4",
-            fontSize: 12,
-            fontWeight: 0
-          },
-          // data: ["A"]
-            data: [" "]
-        },
-        polar: {},
-        series: [
-          {
-            name: "A",
-            type: "bar",
-            radius: ["20%", "100%"],
-            data: [
+          series: [
               {
-                // value: 87,
-                  value: 37,
+                  type: 'gauge',
+                  startAngle: 180,
+                  endAngle: 0,
+                  min: 0,
+                  max: 1000,
+                  splitNumber: 4,
                   itemStyle: {
-                  normal: {
-                    color: "#f54d4d"
-                  }
-                }
-              },
-              {
-                value: 80,
-                itemStyle: {
-                  normal: {
-                    color: "#f87544"
-                  }
-                }
-              },
-              {
-                // value: 75,
-                  value: 90,
-                  itemStyle: {
-                  normal: {
-                    color: "#ffae00"
-                  }
-                }
-              },
-              {
-                // value: 69,
-                  value: 37,
-                  itemStyle: {
-                  normal: {
-                    color: "#dcff00"
-                  }
-                }
-              },
-              {
-                // value: 63,
-                  value: 27,
-                  itemStyle: {
-                  normal: {
-                    color: "#25d053"
-                  }
-                }
-              },
-              {
-                // value: 54,
-                  value: 87,
-                  itemStyle: {
-                  normal: {
-                    color: "#01fff5"
-                  }
-                }
-              },
-              {
-                // value: 47,
-                  value: 17,
-                  itemStyle: {
-                  normal: {
-                    color: "#007cff"
-                  }
-                }
-              },
-              {
-                value: 40,
-                itemStyle: {
-                  normal: {
-                    color: "#4245ff"
-                  }
-                }
-              },
-              {
-                // value: 35,
-                  value: 97,
-                  itemStyle: {
-                  normal: {
-                    color: "#c32eff"
-                  }
-                }
-              },
-              {
-                // value: 33,
-                  value: 67,
-                  itemStyle: {
-                  normal: {
-                    color: "#ff62e8"
-                  }
-                }
+                      color: '#f35cf8', //进度条颜色
+                      shadowColor: 'rgba(0,138,255,0.45)',
+                      shadowBlur: 10,
+                      shadowOffsetX: 2,
+                      shadowOffsetY: 2
+                  },
+                  progress: {
+                      show: true,
+                      roundCap: true,
+                      width: 18,
+                  },
+                  pointer: {
+                      icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+                      length: '55%',
+                      width: 4,
+                      offsetCenter: [0, '5%']
+                  },
+                  axisLine: {
+                      roundCap: true,
+                      lineStyle: {
+                          width: 18
+                      }
+                  },
+                  axisTick: {
+                      splitNumber: 5,
+                      lineStyle: {
+                          width: 2,
+                          color: '#999'
+                      }
+                  },
+                  splitLine: {
+                      length: 12,
+                      lineStyle: {
+                          width: 3,
+                          color: '#999'
+                      }
+                  },
+                  axisLabel: {
+                      distance: 20,
+                      color: '#999',
+                      fontSize: 16
+                  },
+                  title: {
+                      show: false
+                  },
+                  detail: {
+                      // backgroundColor: '#fff',
+                      // borderColor: '#999',
+                      // borderWidth: 2,
+                      width: '190%',
+                      lineHeight: 150,
+                      height: 40,
+                      borderRadius: 8,
+                      offsetCenter: [0, '15%'],
+                      valueAnimation: true,
+                      formatter: function (value) {
+                          return ' {value|' + 'AIR : ' + value.toFixed(0) + '} ';
+                      },
+                      rich: {
+                          value: {
+                              fontSize: 40,
+                              fontWeight: 'bolder',
+                              color: '#02f1df' //数值
+                          },
+                          unit: {
+                              fontSize: 20,
+                              color: '#999',
+                              padding: [0, 0, -20, 10]
+                          }
+                      }
+                  },
+                  data: [
+                      {
+                          value: 0
+                      }
+                  ]
               }
-            ],
-            coordinateSystem: "polar"
-          }
-        ]
+          ]
       };
+
+
+      // 定时获取烟雾数值
+        const fetchData = () => {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    this.smokeValue = data.int; //服务器获取的JSON对象中名为“int”的属性的值。
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        // 模拟值
+    this.timer = setInterval(() => {
+    const newValue = +(Math.random() * 1000).toFixed(2);
+    axios.get("http://127.0.0.1:6666/smoke")
+    .then(response => {
+        this.newValue = response.data
+    })
+
+    this.chart.setOption({
+        series: [
+            {
+                data: [
+                    {
+                        value: newValue
+                    }
+                ]
+            },
+        ],
+    });
+}, 5000);
+
+        //定时器
+        // setInterval(() => {
+        //     fetchData();
+        //     this.chart.setOption({
+        //         series: [
+        //             {
+        //                 data: [
+        //                     {
+        //                         value: this.smokeValue,
+        //                     },
+        //                 ],
+        //             },
+        //         ],
+        //     });
+        // }, 1000);
       this.chart.setOption(option);
     }
   },
@@ -220,3 +178,12 @@ export default {
 
 <style lang="scss" scoped>
 </style>
+
+
+
+
+
+
+
+
+
