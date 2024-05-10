@@ -83,6 +83,7 @@ public class HandlerDataService {
         }
         return result;
     }
+    //TODO 这里处理实时数据 RealTimeData.vue
     public void sendToPageAndSaveDb(SecData secData){
         if(secData.getBindData() != null){
             SecData bindData = secDataDao.queryDataWithPInfoById(secData.getBindData());

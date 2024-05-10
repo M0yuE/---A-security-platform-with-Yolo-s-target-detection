@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+//extends ServiceImpl 就会封装很多常用的数据库操作
+//public class泛型中的 SecConnectDao是Dao类，用于访问数据库以执行实际操作；SecConnect 是实体类，它将会映射到数据库中对应的表。
 public class SecConnectService extends ServiceImpl<SecConnectDao, SecConnect> {
     public PageUtils queryPage(Map<String, Object> params) {
         String paramKey = (String)params.get("name");

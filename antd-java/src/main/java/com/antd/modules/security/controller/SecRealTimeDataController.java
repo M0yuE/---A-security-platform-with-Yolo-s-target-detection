@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/sec/realTimeData")
+// 这里的注解访问地址似乎与前端并不相同 因为在前端的src/api/index.js的路由中做了转发
 public class SecRealTimeDataController {
     @Autowired
     private SecRealTimeDataService secRealTimeDataService;
