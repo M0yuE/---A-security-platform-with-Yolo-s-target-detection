@@ -31,9 +31,9 @@
                             <span class="text colorBlue">数据分析</span>
                         </div>
                     </div>
-                    <div style="width: 40%" class="d-flex">
+                    <div style="width: 41%" class="d-flex">
                         <div class="react-left bg-color-blue mr-3">
-                            <span class="text fw-b">王剑雄老师研究团队</span>
+                            <span class="text fw-b">河北建筑工程学院 - by M0YuE</span>
                         </div>
                         <div class="react-left mr-4"
                             style="width: 6.25rem; background-color: #0f1325; text-align: right;">

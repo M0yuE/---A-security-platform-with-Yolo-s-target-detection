@@ -1,10 +1,13 @@
 #include <ESP8266WiFi.h>
- 
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+
 #define AP_SSID "M0YuE" //这里改成你的wifi名字
 #define AP_PSW  "987654302"//这里改成你的wifi密码
- 
+
 const uint16_t port =6666;
 const char * host = "192.168.43.136"; // ip or dns
+ESP8266WebServer server(10666);
 WiFiClient client;//创建一个tcp client连接
 //led长脚接正极 16脚0红灯 12脚0绿灯 13脚0蓝灯
 // 15脚1则继电器开 0则关
@@ -56,8 +59,8 @@ void setup() {
     delay(500);
   }
   Serial.println("");
-  Serial.println("WiFi连接成功");
-  Serial.print("IP地址是: ");
+  Serial.println("WiFi连接成功" );
+  Serial.print("服务器IP地址是: ");
   Serial.println(WiFi.localIP());
   delay(500);
   Serial.print("连接到 ");
@@ -71,6 +74,25 @@ void setup() {
   }
  Serial.println("TCP server端连接成功");
  client.print("@acbc@");//aabc aabd
+
+   // 设置服务器接收到GET请求时的响应方法
+  server.on("/smoke", HTTP_GET, handleSmoke);
+
+  // 添加对CORS预检请求的支持
+  server.on("/smoke", HTTP_OPTIONS, []() {
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.sendHeader("Access-Control-Allow-Headers", "Content-Type,token");
+    server.send(200, "text/plain", "");
+  });
+
+  // 开始服务器
+  server.begin();
+
+  Serial.println("服务器已开启");
+  Serial.print("服务器IP地址： ");
+  Serial.println(WiFi.localIP());
+
+
 }
 void ctlRed(int statu){
   if(statu == 1){
@@ -121,11 +143,8 @@ void loop() {
 
   GetInfrared();
   GetSmoke();    //此处调用函数为了能够在串口查看并测试数据
+  server.handleClient(); //确保此行被添加到 loop 方法
 
-
-   clientIntValue += 2;
-   // 发送请求
-   wifiClientRequest();
 
   if(client.available()){
     int a1 = client.read();
@@ -301,32 +320,15 @@ int GetSmoke(){
   return smoke;
 }
 
-void wifiClientRequest(){
-//  WiFiClient client;
 
-  // 将需要发送的数据信息放入客户端请求
-  String url = "/smoke?int=" + String(clientIntValue);
+void handleSmoke() {
+  int clientIntValue = GetSmoke(); // 更新为你实际需要发送的值
 
-  // 建立字符串，用于HTTP请求
-  String httpRequest =  String("GET ") + url + " HTTP/1.1\r\n" +
-                        "Host: " + host + "\r\n" +
-                        "Connection: close\r\n" +
-                        "\r\n";
+  // 允许所有来源的跨域访问并设置允许的请求头
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  Serial.print("Connecting to ");
-  Serial.print(host);
-
-  if (client.connect(host, port)) {  //如果连接失败则串口输出信息告知用户然后返回loop
-    Serial.println(" Sucess");
-
-    client.print(httpRequest);          // 向服务器发送HTTP请求
-    Serial.println("Sending request: ");// 通过串口输出HTTP请求信息内容以便查阅
-    Serial.println(httpRequest);
-  } else{
-    Serial.println(" failed");
-  }
-
-  client.stop();
+  server.send(200, "application/json", "{\"int\":" + String(clientIntValue) + "}");
 }
 
 //void buzzer(){     //蜂鸣器

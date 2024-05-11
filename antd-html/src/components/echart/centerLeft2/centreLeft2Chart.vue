@@ -13,7 +13,7 @@ export default {
     return {
         chart: null,
         timer: null,
-        smokeValue:0,
+        smokeValue:5,
     };
   },
   mixins: [echartMixins],
@@ -25,9 +25,6 @@ export default {
       // 基于准备好的dom，初始化echarts实例
       this.chart = this.$echarts.init(document.getElementById("centreLeft2Chart"));
       //  ----------------------------------------------------------------
-      const host = "192.168.43.136";
-      const url = `http://${host}/smoke`;
-      const smokeValue = 600;
       let option = {
           series: [
               {
@@ -119,54 +116,31 @@ export default {
       };
 
 
-      // 定时获取烟雾数值
-        const fetchData = () => {
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    this.smokeValue = data.int; //服务器获取的JSON对象中名为“int”的属性的值。
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        }
-
         // 模拟值
     this.timer = setInterval(() => {
-    const newValue = +(Math.random() * 1000).toFixed(2);
-    axios.get("http://127.0.0.1:6666/smoke")
-    .then(response => {
-        this.newValue = response.data
+    // somkeValue = +(Math.random() * 1000).toFixed(2);
+    axios.get("http://192.168.43.111:10666/smoke" , { //端口注意
+        timeout: 2000,
+    }).then(response => {
+        this.smokeValue = response.int //发送来的格式是{"int" : val}
     })
-
+    .catch(error => {
+        console.error("Error Data Of ESP8266:",error)
+    })
+    // console.log(this.smokeValue)
     this.chart.setOption({
         series: [
             {
                 data: [
                     {
-                        value: newValue
+                        value: this.smokeValue
                     }
                 ]
             },
         ],
     });
-}, 5000);
+},800);
 
-        //定时器
-        // setInterval(() => {
-        //     fetchData();
-        //     this.chart.setOption({
-        //         series: [
-        //             {
-        //                 data: [
-        //                     {
-        //                         value: this.smokeValue,
-        //                     },
-        //                 ],
-        //             },
-        //         ],
-        //     });
-        // }, 1000);
       this.chart.setOption(option);
     }
   },
