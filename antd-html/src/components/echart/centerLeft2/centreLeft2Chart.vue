@@ -13,7 +13,7 @@ export default {
     return {
         chart: null,
         timer: null,
-        smokeValue:5,
+        smokeValue:0,
     };
   },
   mixins: [echartMixins],

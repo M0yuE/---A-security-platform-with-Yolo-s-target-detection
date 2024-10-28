@@ -64,8 +64,8 @@ public class SecConnectService extends ServiceImpl<SecConnectDao, SecConnect> {
         }else{
             this.save(secConnect);
         }
-        //TODO 12888端口将会被设置为yolo向前端传送视频流的端口,或许前端也需要改
-        if(secConnect.getType() == 1 && secConnect.getPort()!= 12888){
+        //10666、12888端口被设置为烟雾数据和视频流的端口，不能开放
+        if(secConnect.getType() == 1 && secConnect.getPort()!= 12888 && secConnect.getPort()!= 10666){
             NettyTCPServer.run(secConnect);
         }else if(secConnect.getType() == 2){
             NettyUDPServer.run(secConnect);

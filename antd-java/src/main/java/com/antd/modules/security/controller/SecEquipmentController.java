@@ -75,6 +75,7 @@ public class SecEquipmentController {
     public R getDataListByInstructId(Integer id){
         return R.ok().put("list", secEquipmentService.getDataListByInstructId(id));
     }
+
     @RequestMapping("/instructSaveOrUpdate")
     @SysLog("保存或修改指令")
     @RequiresPermissions("connectEquipment.equipment.instructWrite")
@@ -82,6 +83,7 @@ public class SecEquipmentController {
         secEquipmentService.instructSaveOrUpdate(secInstruct);
         return R.ok();
     }
+
     @RequestMapping("/instructDelete")
     @SysLog("删除指令")
     @RequiresPermissions("connectEquipment.equipment.instructDelete")
@@ -113,6 +115,7 @@ public class SecEquipmentController {
     public R parseData(SecData secData){
         return secEquipmentService.parseData(secData);
     }
+
     @RequestMapping("/sendInstruct")
     @SysLog("手动发送指令")
     @RequiresPermissions("connectEquipment.equipment.sendInstruct")
